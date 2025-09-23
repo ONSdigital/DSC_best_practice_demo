@@ -11,26 +11,26 @@ clean: ## Clean the temporary files.
 	rm -rf .ruff_cache	
 
 check-python: ## Format the python code (auto fix)
-	poetry run isort . --verbose
-	poetry run black .
-	poetry run ruff check . --fix
-	poetry run mypy --follow-untyped-imports src
-	poetry run pylint --verbose .
-	poetry run bandit -r src
+	uv tool run isort . --verbose --skip .venv
+	uv tool run black .
+	uv tool run ruff check . --fix
+	uv tool run mypy --follow-untyped-imports src
+	uv tool run pylint --verbose --ignore=.venv .
+	uv tool run bandit -r src
 
 check-python-nofix: ## Format the python code (no fix)
-	poetry run isort . --check --verbose
-	poetry run black . --check
-	poetry run ruff check .
-	poetry run mypy --follow-untyped-imports src
-	poetry run pylint --verbose .
-	poetry run bandit -r src
+	uv tool run isort . --check --verbose --skip .venv
+	uv tool run black . --check
+	uv tool run ruff check .
+	uv tool run mypy --follow-untyped-imports src
+	uv tool run pylint --verbose --ignore=.venv .
+	uv tool run bandit -r src
 
 check-python-security: ## security checks only (no-fix)
-	poetry run bandit -r src
+	uv tool run bandit -r src
 
 black: ## Run black
-	poetry run black .
+	uv tool run black .
 
 setup-gitleaks: ## Grab the docker image
 	docker pull zricethezav/gitleaks:latest
