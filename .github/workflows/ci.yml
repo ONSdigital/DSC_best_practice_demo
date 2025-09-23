@@ -1,0 +1,81 @@
+---
+    name: CI
+    
+    on: # yamllint disable-line rule:truthy
+      push:
+        branches: [main]
+      pull_request:
+        branches: [main]
+    
+    concurrency:
+      group: "${{ github.head_ref || github.ref }}-${{ github.workflow }}"
+      cancel-in-progress: true
+
+    jobs:
+        lint-test:
+            name: Lint and Test
+            runs-on: ubuntu-22.04
+            strategy:
+              matrix:
+                python-version: ["3.12"]
+
+            steps:
+                - uses: actions/checkout@v4
+
+                - name: Set up Python
+                  uses: actions/setup-python@v5
+                  with:
+                    python-version: ${{ matrix.python-version }}
+
+                - name: Install Poetry
+                  run: |
+                    curl -sSL https://install.python-poetry.org | python3 - --version 1.7.1
+
+                - name: Add poetry to PATH
+                  run: echo "/home/runner/.local/bin" >> $GITHUB_PATH
+
+                - name: Config Poetry for .venv
+                  run: /home/runner/.local/bin/poetry config virtualenvs.in-project true
+                  
+                - name: Enable Poetry Cache
+                  uses: actions/cache@v4
+                  with:
+                    path: |
+                      .venv
+                      ~/.cache/pypoetry
+                      ~/.cache/pip
+                    key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock')}}
+                    restore-keys: |
+                      ${{ runner.os }}-poetry-
+
+                - name: Display Python version
+                  run: python -c "import sys; print(sys.version)"
+
+                - name: Debug
+                  run: |
+                    echo "=== PATH ==="
+                    echo $PATH
+                    echo "=== Pyth loc and ver ==="
+                    which python
+                    python --version
+                    echo "=== Poetry location ==="
+                    which poetry || echo "poetry NOT FOUND!"
+                    poetry --version || echoe "Poetry command fails"
+                    echo "=== Local bin ==="
+                    ls -l /home/runner/.local/bin || "No local bin dir"
+                    echo "=== cache dirs ==="
+                    du -sh ~/.cache/* || true
+                
+                - name: Build poetry lockfile
+                  run: /home/runner/.local/bin/poetry lock
+
+                - name: Install dependencies
+                  run: /home/runner/.local/bin/poetry install --no-root
+  
+                - name: check code formatting
+                  run: make check-python-nofix
+
+                - name: Cleanup residue file
+                  run: make clean
+    
+    
