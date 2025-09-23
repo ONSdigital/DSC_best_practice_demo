@@ -1,0 +1,64 @@
+---
+    name: CI
+    
+    on: # yamllint disable-line rule:truthy
+      push:
+        branches: [main]
+      pull_request:
+        branches: [main]
+    
+    concurrency:
+      group: "${{ github.head_ref || github.ref }}-${{ github.workflow }}"
+      cancel-in-progress: true
+
+    jobs:
+        lint-test:
+            name: Lint and Test
+            runs-on: ubuntu-22.04
+            strategy:
+              matrix:
+                python-version: ["3.12.4"]
+
+            steps:
+                - name: Install virtualenv with specific version
+                  # This is only a temporary fix to ensure compatibility with Poetry & virtualenv
+                  # Relevant issues:
+                  # - https://github.com/pypa/virtualenv/issues/2931
+                  # - https://github.com/python-poetry/poetry/issues/10490
+                  # - https://github.com/actions/setup-python/issues/1167
+                  run: pipx install virtualenv==20.32
+
+                - uses: actions/checkout@v4
+                - name: Install Poetry
+                  run: pipx install poetry==1.7.1
+
+                - name: Set up Python
+                  uses: actions/setup-python@v5
+                  with:
+                    python-version: ${{ matrix.python-version }}
+
+                - name: Display Python version
+                  run: python -c "import sys; print(sys.version)"
+
+                - name: Set up Poetry environment
+                  run: |
+                    poetry env use $(which python)
+
+                - name: Install dependencies
+                  run: |
+                    poetry install --no-cache --no-interaction
+                
+                - name: Check Poetry Virtual Environment
+                  run: |
+                    poetry env info
+                    poetry env list      
+
+                - name: Check Import path
+                  run: |
+                    poetry run python -c "import sys; print(sys.path)"
+
+                - name: Lint Python
+                  run: make check-python-nofix
+
+                - name: Cleanup residue file
+                  run: make clean
