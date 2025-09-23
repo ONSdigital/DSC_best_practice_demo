@@ -1,0 +1,41 @@
+[project]
+name = "example_package"
+description = "TODO"
+authors = [
+    { name = "TODO", email = "TODO@ons.gov.uk" },
+]
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+dynamic = ["version"]
+dependencies = [
+    "pyprojroot==0.3.0",
+    "toml>=0.10.2",
+    "isort>=4.3.21",
+    "pylint>=2.4.4",
+    "black>=25.1.0",
+    "ruff>=0.11.0",
+    "mypy>=1.15.0",
+    "bandit>=1.8.3"
+]
+
+
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project.optional-dependencies]
+dev = [
+    "pre-commit>=3.3.3",
+]
+
+[tool.ruff]
+line-length = 120
+exclude = ["uv.lock"]
+
+[tool.ruff.lint]
+extend-select = ["D", "I", "W"]
+ignore = ["D105", "D107", "D202"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
