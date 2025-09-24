@@ -16,6 +16,19 @@ git clone <your repo's clone link>
 cd <your repo's name>
 ```
 
+>**Windows users:**
+>NOTE: if you are working on Windows, there are a few extra steps.
+> 
+>First, set up a virtual environment and activate it using the following commands 
+>in the terminal:
+>```
+><path-to-python> -m venv .venv
+>```
+>```
+>.venv\Scripts\activate
+>```
+
+
 * Install `uv` for package management and orchestration of package build processes with 
 ```bash
 pip install uv
