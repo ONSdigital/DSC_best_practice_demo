@@ -12,6 +12,13 @@ repos:
       - id: check-yaml
       - id: debug-statements
       - id: check-merge-conflict
+      - id: detect-private-key # detects the presence of private keys.
+      - id: check-added-large-files # check for files above certain size (as likely to be data files)
+        args: ['--maxkb=500']
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
+    hooks:
+      - id: detect-secrets
   - repo: local
     hooks:
       - id: forbid-new-init
@@ -19,14 +26,6 @@ repos:
         entry: python
         language: fail
         files: ^src/__init__.py$
-      - id: setup-gitleaks
-        name: Grab the gitleaks Docker image
-        entry: make setup-gitleaks
-        language: system
-      - id: run-gitleaks
-        name: Check commits for secrets, using gitleaks Docker image
-        entry: make run-gitleaks
-        language: system
       - id: vulnerability-linting-checks
         name: Run vulnerability detection checks (bandit)
         entry: make check-python-security
