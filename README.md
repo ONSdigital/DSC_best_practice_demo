@@ -64,11 +64,12 @@ make setup-git-hooks
 
 Forking this template under the `ONSdigital` GitHub group will provide access to GitHub Enterprise level security enhancements in GitHub, including ongoing dependancy scanning and reporting via Dependabot, and GitGuardian checks when Pull Requests are opened.
 
-Additionally, we include `bandit` and `gitleaks` checks in the pre-commit hooks that we provide, to prevent API key / secret leaks making it as far as a (potentially public) remote GitHub repository.
+Additionally, we include `bandit` checks in the pre-commit hooks that we provide, to prevent API key / secret leaks making it as far as a (potentially public) remote GitHub repository.
 
-* `bandit`: a Python security tool, which scans code to identify bad / dangerous practices. See [the documentation](https://bandit.readthedocs.io/en/latest/) for more detail.
+`bandit` is a Python security tool, which scans code to identify bad / dangerous practices. See [the documentation](https://bandit.readthedocs.io/en/latest/) for more detail.
 
-* `gitleaks`: a pattern-based security tool, used to identify strings that match the form of API keys / other secrets that should not be made public. `gitleaks` is not as robust as GitGuardian, but has the advantage of being able to be used locally, and as a free and open-source package it can be used for repositories not under a GitHub Enterprise licence. See [the documentation](https://github.com/gitleaks/gitleaks) for more detail.
+On creation of a pull request, the github workflow includes checks with `gitleaks`.
+`gitleaks` is a pattern-based security tool, used to identify strings that match the form of API keys / other secrets that should not be made public. `gitleaks` is not as robust as GitGuardian, but has the advantage of being able to be used locally, and as a free and open-source package it can be used for repositories not under a GitHub Enterprise licence. See [the documentation](https://github.com/gitleaks/gitleaks) for more detail.
 
 ## License
 
