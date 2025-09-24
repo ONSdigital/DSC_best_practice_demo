@@ -52,3 +52,54 @@ default = true
 ```
 
 (see [`uv`'s documentation](https://docs.astral.sh/uv/getting-started/installation/#pypi) for alternative installation methods)
+
+## 3. Setting up a virtual environment using `uv` and the ONSApps Python version
+
+### 3a. Method 1: create a venv explicitly using your version of python
+
+To create a virtual environment, simply open a terminal and type
+```
+python3_11 -m venv .venv
+```
+
+To activate the environment, run this:
+```
+.venv\Scripts\activate
+```
+
+**Advantages:**
+
+* Guarantees the venv uses the exact Python interpreter you specify, regardless of PATH order.
+* Most portable and standard method—works everywhere Python is installed.
+* No dependency on uv for venv creation; users only need Python.
+* Ensures compatibility in environments with multiple Python versions or strict IT controls.
+
+**Disadvantages:**
+
+* You cannot use commands like `uv tool run ...` unless you explicitly install tools with 
+`uv tool install ...` which then doesn't make it so reproduceable.
+* Slightly more manual, as you must specify the full path to Python.
+
+### 3b. Method 2: use uv to create the venv
+In this method, you need to only have one version of Python installed, or make sure
+the version of python you are using is the first in your PATH. 
+
+It will also need to be the first item in your PATH every time you restart the terminal 
+and activate the environment. In this cas you can simply setup your venv with
+
+```
+uv venv
+```
+
+**Advantages:**
+
+* Convenient: creates a venv using the first Python found in your PATH.
+* Integrates with uv’s tool management features (e.g., uv tool run ... works out of the box if tools are installed with uv tool install ...).
+* Good for users who have a single, well-configured Python in their PATH.
+
+**Disadvantages:**
+
+* Does not let you directly specify a Python path; relies on PATH order.
+* If multiple Pythons are installed, may use the wrong one unless you adjust PATH.
+* Less portable in locked-down or multi-Python environments.
+* If your required Python is not first in PATH, you must manually update PATH before running `uv venv` or on restarting the terminal

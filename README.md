@@ -8,39 +8,37 @@ To create a new repository from this template, click the green 'Use this templat
 
 * Assuming you have created a new repository from this template, clone that repository locally with 
 ```
-git clone <your repo's clone link>
+git clone <link_to_your_repo>
 ```
 
 * Next, change directory to your newly cloned repository with 
-```bash
-cd <your repo's name>
+```
+cd <name_of_your_repo>
 ```
 
 >**Windows users:**
 >NOTE: if you are working on Windows, there are a few extra steps.
 > 
->Follow this link for setting up Python on ONS machines and installing the `uv` package:
+>Follow this link for setting up Python on ONS machines and installing the `uv` package
+>and the different options for setting up a virtual environment
 >
 >[docs/environment_setup.md](docs/environment_setup.md)
 >
 
-* To create a virtual environment, open a terminal, select a Pthon interpreter, and type
-```
-<path_to_python> -m venv .venv
-```
-
-To activate the environment, run this:
-```
-.venv\Scripts\activate
-```
+* To install the packages, activate your virtual environment and then do the following:
 
 
-* Install the project and it's dependencies in the virtual environment: 
 First build the lockfile to persist exact package versions:
 ```
 uv lock  
 ```
-Now install the packages specified in the lockfile
+Now install the packages specified in the lockfile. If you're not a developer run:
+```
+uv sync
+```
+
+However, if you are a developer and will contribute to the project, you will also need to 
+install pre-commits (see below) so *instead* run:
 ```
 uv sync --extra dev
 ```
@@ -52,13 +50,15 @@ uv sync --extra dev
 
 #### Set up pre-commit hooks
 This template comes with `pre-commit` hooks configured for best practices, linting and security.
-On each `git commit` and `git push`, it runs validation checks and security checks using `bandit` and `gitleaks`, which must pass for the commit / push to be carried out.
+On each `git commit` and `git push`, it runs validation checks and security checks using `bandit`, which must pass for the commit / push to be carried out. Further checks using `gitleaks` are carried out in github on creation of a pull request.
 
 `bandit` and `gitleaks` are described in more detail in the Security section, below.
 
-```bash
-make setup-git-hooks
+After completing the setup described above using `uv sync --extra dev`, run
 ```
+pre-commit install
+```
+This sets up the pre-commit hooks. The first time you actually do a commit, it might take a while, but that will only be a one-off.
 
 #### Security
 
