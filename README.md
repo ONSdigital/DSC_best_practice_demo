@@ -4,10 +4,10 @@ This repository acts as a template, for quickly spinning up new Python-based pro
 
 To create a new repository from this template, click the green 'Use this template' button at the top right of this page.
 
-## Installation
+## Installation on an ONS Windows computer
 
 * Assuming you have created a new repository from this template, clone that repository locally with 
-```bash
+```
 git clone <your repo's clone link>
 ```
 
@@ -19,37 +19,32 @@ cd <your repo's name>
 >**Windows users:**
 >NOTE: if you are working on Windows, there are a few extra steps.
 > 
->First, set up a virtual environment and activate it using the following commands 
->in the terminal:
->```
-><path-to-python> -m venv .venv
->```
->```
->.venv\Scripts\activate
->```
+>Follow this link for setting up Python on ONS machines and installing the `uv` package:
+>
+>[docs/environment_setup.md](docs/environment_setup.md)
+>
 
-
-* Install `uv` for package management and orchestration of package build processes with 
-```bash
-pip install uv
+* To create a virtual environment, open a terminal, select a Pthon interpreter, and type
 ```
-(see [`uv`'s documentation](https://docs.astral.sh/uv/getting-started/installation/#pypi) for alternative installation methods)
-
-* Install the project and it's dependencies in a `uv`-managed virtual environment with
-```bash
-# build the lockfile to persist exact package versions
-uv lock
-# install the packages specified in the lockfile
-uv sync
+<path_to_python> -m venv .venv
 ```
 
-## Packaging
-
-To create an installable package for the current project, you can run
-```bash
-uv build
+To activate the environment, run this:
 ```
-which will create a `dist/` directory containing `pip install`-able package files in both `.tar.gz` and `.whl` formats.
+.venv\Scripts\activate
+```
+
+
+* Install the project and it's dependencies in the virtual environment: 
+First build the lockfile to persist exact package versions:
+```
+uv lock  
+```
+Now install the packages specified in the lockfile
+```
+uv sync --extra dev
+```
+
 
 ## Contributing
 
