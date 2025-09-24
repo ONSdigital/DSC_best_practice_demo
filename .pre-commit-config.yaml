@@ -28,6 +28,6 @@ repos:
         files: ^src/__init__.py$
       - id: vulnerability-linting-checks
         name: Run vulnerability detection checks (bandit)
-        entry: uv tool run bandit -r src
+        entry: bandit -r src
         language: system
         
